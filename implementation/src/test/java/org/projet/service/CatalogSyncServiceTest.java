@@ -19,6 +19,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers
 class CatalogSyncServiceTest {
@@ -44,7 +46,7 @@ class CatalogSyncServiceTest {
         CatalogCacheRepository cacheRepository = new CatalogCacheRepository(jdbi);
         coursRepository = new CoursRepository(cacheRepository);
 
-        server = startPlanifiumStub();
+        server = startPlanifiumStub(validProgramsResponse());
         System.setProperty("planifium.base", "http://localhost:" + server.getAddress().getPort());
 
         new CatalogSyncService(cacheRepository).syncAll();
@@ -69,30 +71,35 @@ class CatalogSyncServiceTest {
         assertEquals("A25", cours.get(0).getSchedules().get(0).getSemester());
     }
 
-    private HttpServer startPlanifiumStub() throws IOException {
+    @Test
+    void fetchProgramsRawEchoueSiPlanifiumRetourneUnObjetErreur() throws Exception {
+        server.stop(0);
+        server = startPlanifiumStub("""
+                {
+                  "status_code": 500,
+                  "detail": "validation error"
+                }
+                """);
+        System.setProperty("planifium.base", "http://localhost:" + server.getAddress().getPort());
+
+        IllegalStateException exception = assertThrows(
+                IllegalStateException.class,
+                () -> new CatalogSyncService(new CatalogCacheRepository()).fetchProgramsRaw()
+        );
+
+        assertTrue(exception.getMessage().contains("Planifium programs response must be a JSON array"));
+        assertTrue(exception.getMessage().contains("\"status_code\": 500"));
+        assertTrue(exception.getMessage().contains("validation error"));
+    }
+
+    private HttpServer startPlanifiumStub(String programsResponse) throws IOException {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(0), 0);
         httpServer.createContext("/", exchange -> {
             String path = exchange.getRequestURI().getPath();
             String response;
 
             if ("/api/v1/programs".equals(path)) {
-                response = """
-                        [
-                          {
-                            "id": "117510",
-                            "name": "Informatique",
-                            "segments": [
-                              {
-                                "blocs": [
-                                  {
-                                    "courses": ["IFT2255"]
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                        """;
+                response = programsResponse;
             } else if ("/api/v1/courses/IFT2255".equals(path)) {
                 response = """
                         {
@@ -137,5 +144,25 @@ class CatalogSyncServiceTest {
         });
         httpServer.start();
         return httpServer;
+    }
+
+    private String validProgramsResponse() {
+        return """
+                [
+                  {
+                    "id": "117510",
+                    "name": "Informatique",
+                    "segments": [
+                      {
+                        "blocs": [
+                          {
+                            "courses": ["IFT2255"]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+                """;
     }
 }

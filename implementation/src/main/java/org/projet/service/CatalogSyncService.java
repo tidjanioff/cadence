@@ -16,7 +16,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -88,6 +87,12 @@ public class CatalogSyncService {
                     + ", courses=" + coursesSynced
                     + ", schedules=" + schedulesSynced
                     + ", durationMs=" + millis);
+            if (programsSynced == 0 || coursesSynced == 0) {
+                LOGGER.warning("Catalog sync completed with missing data: programs=" + programsSynced
+                        + ", courses=" + coursesSynced
+                        + ", schedules=" + schedulesSynced
+                        + ", durationMs=" + millis);
+            }
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "Catalog sync failed", e);
         }
@@ -98,10 +103,17 @@ public class CatalogSyncService {
                 .uri(buildUri("/programs", null))
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        String body = response.body();
         if (response.statusCode() != 200) {
-            throw new IllegalStateException("Planifium programs status: " + response.statusCode());
+            throw new IllegalStateException("Planifium programs status: " + response.statusCode()
+                    + ", body: " + body);
         }
-        return mapper.readTree(response.body());
+
+        JsonNode programs = mapper.readTree(body);
+        if (!programs.isArray()) {
+            throw new IllegalStateException("Planifium programs response must be a JSON array, got: " + body);
+        }
+        return programs;
     }
 
     public Optional<Cours> fetchCourseFromPlanifium(String courseId, boolean includeSchedule) throws Exception {
@@ -116,11 +128,15 @@ public class CatalogSyncService {
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() != 200) {
+            LOGGER.warning("Skipping course " + courseId + ": Planifium status=" + response.statusCode()
+                    + ", body: " + response.body());
             return Optional.empty();
         }
 
         JsonNode root = mapper.readTree(response.body());
         if (!root.isObject() || !root.hasNonNull("id")) {
+            LOGGER.warning("Skipping course " + courseId + ": malformed Planifium response body: "
+                    + response.body());
             return Optional.empty();
         }
 
@@ -134,11 +150,14 @@ public class CatalogSyncService {
 
         try (InputStream response = fetchSchedulesFromPlanifium(courseId, semester)) {
             if (response == null) {
+                LOGGER.warning("Skipping schedule " + courseId + " " + semester + ": empty Planifium response");
                 return Optional.empty();
             }
 
             JsonNode schedules = mapper.readTree(response);
             if (!schedules.isArray()) {
+                LOGGER.warning("Skipping schedule " + courseId + " " + semester
+                        + ": Planifium response is not an array: " + schedules);
                 return Optional.empty();
             }
 
@@ -148,9 +167,11 @@ public class CatalogSyncService {
                 }
             }
         } catch (Exception e) {
-            LOGGER.log(Level.FINE, "Unable to fetch schedule " + courseId + " " + semester, e);
+            LOGGER.log(Level.WARNING, "Unable to fetch schedule " + courseId + " " + semester, e);
         }
 
+        LOGGER.warning("Skipping schedule " + courseId + " " + semester
+                + ": no matching schedule returned by Planifium");
         return Optional.empty();
     }
 
