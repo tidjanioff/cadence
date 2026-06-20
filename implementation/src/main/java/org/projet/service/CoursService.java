@@ -676,62 +676,6 @@ float moyenneAvisDifficulte = 0;
     }
 
     /**
-     * Cette méthode permet de vérifier l'éligibilité à un cours.
-     *
-     * @param idCours    id du cours dont on veut vérifier notre éligibilité.
-     * @param listeCours liste des cours déjà faits
-     * @return un message indiquant si on est éligible ou non.
-     */
-
-    public String checkEligibility(String idCours, List<String> listeCours) {
-
-
-        if (!validateIdCours(idCours)) {
-            return "L'id du cours est invalide";
-        }
-
-        boolean allValid = listeCours.stream()
-                .allMatch(this::validateIdCours);
-
-        if (!allValid) {
-            return "Il y a des cours complétés invalides";
-        }
-
-
-        try {
-            // on récupère le corps de la réponse de la requête.
-            String responseBody = this.coursRepository.getCourseEligibility(idCours, listeCours);
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(responseBody);
-            String retour = "";
-            if (root.get("eligible").asBoolean()) {
-                retour = "Vous êtes éligible à ce cours!";
-            } else {
-                retour = "Vous n'êtes pas éligible à ce cours. Il vous manque le(s) prerequis suivants:";
-                JsonNode prerequisManquants = root.get("missing_prerequisites");
-
-                List<String> coursManquants = new ArrayList<>();
-
-                for (JsonNode item : prerequisManquants) {
-                    coursManquants.add(item.asText());
-                }
-
-                retour = "Vous n'êtes pas éligible à ce cours. Il vous manque les prerequis suivants : " + String.join(",", coursManquants);
-
-            }
-
-            return retour;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "Une erreur est survenue lors de la vérification d'éligibilité.";
-
-        }
-
-
-    }
-
-
-    /**
      * Cette méthode permet d'extraire la partie numérique d’un identifiant de cours.
      * Par exemple, pour {@code "IFT2255"}, la méthode retourne {@code 2255}.
      * Si l’identifiant est invalide ou ne contient aucun chiffre,
@@ -1245,30 +1189,6 @@ float moyenneAvisDifficulte = 0;
     private String format(int minutes) {
         return String.format("%02d:%02d", minutes / 60, minutes % 60);
     }
-    /**
-     * Objet de transfert représentant un programme académique.
-     * Contient l’identifiant et le nom du programme.
-     */
-    public class ProgrammeDTO {
-    
-        /** Identifiant du programme. */
-        public String id;
-
-        /** Nom du programme. */
-        public String name;
-
-        /**
-         * Construit un objet ProgrammeDTO.
-         *
-         * @param id identifiant du programme.
-         * @param name nom du programme.
-         */
-        public ProgrammeDTO(String id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-    }
-
     /**
      * Cette methode retourne une liste de nom de programme qui contienne le {@code nom} fournis en parametre
      *

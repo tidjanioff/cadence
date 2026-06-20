@@ -1,15 +1,10 @@
 package org.projet.controller;
 
 import io.javalin.http.Context;
-import org.projet.model.Avis;
-import org.projet.model.Cours;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
-import java.util.List;
 
 public class CoursControllerTest {
 
@@ -120,57 +115,5 @@ public class CoursControllerTest {
 
         verify(ctx).status(anyInt());
     }
-
-    //Tests pour checkEligibility
-
-    @Test
-    @DisplayName("Vérification d'éligibilité avec cours et prérequis valides")
-    void testCheckEligibility_validCourseAndPrerequisites() {
-        CoursController controller = new CoursController();
-        Context ctx = mock(Context.class);
-        CoursController.RequeteEligibilite req = new CoursController.RequeteEligibilite();
-        req.idCours = "IFT2255";
-        req.listeCours = List.of("IFT1025", "IFT1030");
-
-        when(ctx.bodyAsClass(CoursController.RequeteEligibilite.class)).thenReturn(req);
-
-        controller.checkEligibility(ctx);
-
-        verify(ctx).json(any());
-    }
-
-    @Test
-    @DisplayName("Vérification d'éligibilité avec cours invalide")
-    void testCheckEligibility_invalidCourse() {
-        CoursController controller = new CoursController();
-        Context ctx = mock(Context.class);
-        CoursController.RequeteEligibilite req = new CoursController.RequeteEligibilite();
-        req.idCours = "INVALID_COURSE";
-        req.listeCours = List.of("IFT1025");
-
-        when(ctx.bodyAsClass(CoursController.RequeteEligibilite.class)).thenReturn(req);
-
-        controller.checkEligibility(ctx);
-
-        verify(ctx).json(any());
-    }
-
-    @Test
-    @DisplayName("Vérification d'éligibilité avec liste de prérequis vide")
-    void testCheckEligibility_emptyPrerequisites() {
-        CoursController controller = new CoursController();
-        Context ctx = mock(Context.class);
-        CoursController.RequeteEligibilite req = new CoursController.RequeteEligibilite();
-        req.idCours = "IFT2255";
-        req.listeCours = List.of();
-
-        when(ctx.bodyAsClass(CoursController.RequeteEligibilite.class)).thenReturn(req);
-
-        controller.checkEligibility(ctx);
-
-        verify(ctx).json(any());
-    }
-
-
 
 }

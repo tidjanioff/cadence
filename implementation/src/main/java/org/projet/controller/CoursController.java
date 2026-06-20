@@ -16,17 +16,6 @@ public class CoursController {
     private CoursService coursService =CoursService.getInstance();
 
     /**
-     * Cette méthode permet de vérifier l'éligibilité à un cours ( sans cycle).
-     * @param ctx requête + réponse.
-     */
-    public void checkEligibility(Context ctx){
-        RequeteEligibilite req = ctx.bodyAsClass(RequeteEligibilite.class);
-        String resultat = coursService.checkEligibility(req.idCours,req.listeCours);
-        ctx.json(resultat);
-    }
-
-
-    /**
      * Cette méthode permet de gérer la requête de recherche de cours.
      * @param ctx requête + notre réponse.
      */
@@ -306,16 +295,6 @@ public class CoursController {
     }
 
     /**
-     * Cette classe permet de parser le json du body de la requête stats. La classe est interne donc
-     * on peut déclarer les attributs publics.
-     */
-    public static class RequeteStats {
-        /** Sigle du cours concerné par l’analyse statistique. */
-        public String sigle;
-    }
-
-
-    /**
      * Cette classe parse le json du body de la requête Resultat.
      */
     public static class RequeteResultats {
@@ -388,18 +367,6 @@ public class CoursController {
         /** Trimestre académique ciblé par la recherche. */
         public String semester;
     }
-    /**
-     * Cette classe permet de parser le json du body de la requête eligibilite. La classe est interne donc
-     * on peut déclarer les attributs publics.
-     */
-    public static class RequeteEligibilite{
-        /** Identifiant du cours à vérifier. */
-        public String idCours;
-
-        /** Liste des cours déjà complétés par l’étudiant. */
-        public List<String> listeCours;
-    }
-
     /**
      * Cette classe permet de parser le json du body de la requête comparaisonCombinaison. La classe est interne donc
      * on peut déclarer les attributs publics.
