@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-background: #fbfbfd;
+  --color-text-primary: #1d1d1f;
+  --color-text-secondary: #86868b;
+  --color-accent: #0071e3;
+  --color-conflict: #ff3b30;
+  --radius-card: 16px;
+  --radius-panel: 24px;
+  font-family: -apple-system, "SF Pro Display", "Inter", sans-serif;
+  color: var(--color-text-primary);
+  background: var(--color-background);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--color-background);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ambient {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.ambient-left {
+  top: 14%;
+  left: -12rem;
+  width: 30rem;
+  height: 30rem;
+  background: radial-gradient(circle, rgba(0, 113, 227, 0.12), transparent 68%);
+}
+
+.ambient-right {
+  right: -8rem;
+  bottom: -10rem;
+  width: 38rem;
+  height: 38rem;
+  background: radial-gradient(circle, rgba(255, 189, 120, 0.16), transparent 67%);
+}
+
+.reveal {
+  animation: reveal 700ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.reveal-delay {
+  animation-delay: 120ms;
+}
+
+.course-card {
+  animation: rise 550ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .course-card {
+    animation: none;
+  }
+}

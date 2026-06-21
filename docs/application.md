@@ -16,7 +16,7 @@ title: Implémentation
 
 - **Langage principal :** Java  
 - **Framework backend :** Javalin 
-- **Framework frontend :** JavaFX
+- **Frontend :** React, TypeScript, Vite et Tailwind CSS
 - **Gestion des dépendances :** Maven  
 - **Tests :** JUnit 5, Mockito  
 - **Documentation :** JavaDoc + MkDocs  
@@ -31,13 +31,7 @@ implementation/
  │
  ├── src/
  │   ├── main/
- │   │   ├── java/
- │   │   │   ├── client/
- │   │   │   │   ├── controller/
- │   │   │   │   ├── service/
- │   │   │   │   └── MainApp.java
- │   │   │   │
- │   │   │   └── org/projet/
+ │   │   ├── java/org/projet/
  │   │   │       ├── controller/
  │   │   │       ├── service/
  │   │   │       ├── repository/
@@ -56,6 +50,14 @@ implementation/
  │           ├── service/
  │           ├── repository/
  │           └── model/
+
+frontend/
+ ├── src/
+ │   ├── api/
+ │   ├── components/
+ │   ├── pages/
+ │   └── types/
+ └── package.json
 ```
 
 ## Découpage en couches

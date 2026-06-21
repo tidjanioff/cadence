@@ -22,7 +22,9 @@ public class Main {
         CoursController coursController = new CoursController();
         AvisController avisController = new AvisController();
         AdminController adminController = new AdminController();
-        var app = Javalin.create().start(7070);
+        var app = Javalin.create(config -> config.bundledPlugins.enableCors(cors -> {
+            cors.addRule(rule -> rule.anyHost());
+        })).start(7070);
         app.post("/admin/sync", adminController::syncCatalog);
         // #1 Rechercher des cours 
         app.post("/cours/rechercher", coursController::rechercherCours);

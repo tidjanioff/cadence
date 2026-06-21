@@ -13,26 +13,11 @@
     <properties>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javafx.version>21</javafx.version>
         <testcontainers.version>1.20.4</testcontainers.version>
     </properties>
 
     <dependencies>
 
-        <!-- JavaFX -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
-
-        <!-- Autres dépendances (inchangées) -->
         <dependency>
             <groupId>io.javalin</groupId>
             <artifactId>javalin</artifactId>
@@ -142,22 +127,9 @@
                 <subpackages>
                     org.projet
                 </subpackages>
-                <excludePackageNames>
-                    client.controller:client
-                </excludePackageNames>
                 <doclint>none</doclint>
             </configuration>
         </plugin>
-
-            <!-- Plugin JavaFX (OBLIGATOIRE) -->
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
-                <configuration>
-                    <mainClass>client.MainApp</mainClass>
-                </configuration>
-            </plugin>
 
             <!-- Compiler Java 17 plugin -->
             <plugin>
@@ -177,7 +149,7 @@
     <version>3.1.2</version>
     <configuration>
         <forkCount>0</forkCount> <!-- Exécute les tests dans le même JVM que Maven -->
-        <argLine>-Djava.awt.headless=true --add-modules javafx.controls,javafx.fxml</argLine>
+        <argLine>-Djava.awt.headless=true</argLine>
     </configuration>
 </plugin>
 
