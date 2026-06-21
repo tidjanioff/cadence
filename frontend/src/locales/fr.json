@@ -1,0 +1,189 @@
+{
+  "header": {
+    "byline": "par PickCourse",
+    "languageLabel": "Langue",
+    "english": "EN",
+    "french": "FR"
+  },
+  "landing": {
+    "eyebrow": "Trouvez votre prochain cours",
+    "title": "Créez un horaire sans conflit.",
+    "description": "Parcourez le catalogue, trouvez ce qui vous convient et faites en sorte que chaque session s’agence naturellement.",
+    "search": {
+      "label": "Rechercher par code, nom ou description de cours",
+      "placeholder": "Essayez IFT1025 ou algorithmes",
+      "button": "Rechercher des cours",
+      "buttonShort": "Rechercher"
+    },
+    "states": {
+      "searching": {
+        "title": "Recherche de cours…"
+      },
+      "error": {
+        "title": "La recherche est momentanément indisponible.",
+        "detail": "Veuillez réessayer dans un instant."
+      },
+      "empty": {
+        "title": "Aucun cours trouvé.",
+        "detail": "Essayez un autre code ou un nom de cours plus large."
+      }
+    },
+    "resultsFor": "Résultats pour « {{query}} »",
+    "resultsCount_one": "{{count}} cours",
+    "resultsCount_other": "{{count}} cours",
+    "credits_one": "{{count}} cr.",
+    "credits_other": "{{count}} cr."
+  },
+  "courseDetail": {
+    "loading": {
+      "title": "Chargement du cours…"
+    },
+    "notFound": {
+      "title": "Ce cours est introuvable.",
+      "detail": "Vérifiez le code du cours ou revenez à la recherche."
+    },
+    "nav": {
+      "backToSchedule": "← Retour à l’horaire",
+      "backToSearch": "← Retour à la recherche",
+      "allCourses": "← Tous les cours"
+    },
+    "hero": {
+      "credits_one": "{{count}} crédit",
+      "credits_other": "{{count}} crédits"
+    },
+    "addToSchedule": "Ajouter à l’horaire",
+    "descriptionFallback": "Aucune description du cours n’est encore disponible.",
+    "eligibility": {
+      "eyebrow": "Planifiez avec confiance",
+      "title": "Vérifiez votre admissibilité.",
+      "description": "Entrez les cours que vous avez réussis et votre cycle d’études actuel.",
+      "completedLabel": "Cours réussis",
+      "completedPlaceholder": "IFT1015, MAT1400",
+      "cycleLabel": "Cycle d’études",
+      "checkButton": "Vérifier l’admissibilité",
+      "checking": "Vérification…",
+      "eligibleTitle": "Vous êtes admissible.",
+      "eligibleDetail": "{{message}}",
+      "ineligibleTitle": "Pas encore admissible.",
+      "ineligibleDetail": "{{message}}",
+      "error": "Impossible de vérifier l’admissibilité pour le moment. Veuillez réessayer."
+    },
+    "stats": {
+      "eyebrow": "En un coup d’œil",
+      "title": "Sachez à quoi vous attendre.",
+      "description": "Performance et inscriptions historiques, sans détour.",
+      "difficultyLabel": "Difficulté",
+      "popularityLabel": "Popularité",
+      "loading": "Chargement…",
+      "moderate": "Moyenne",
+      "approachable": "Accessible",
+      "challenging": "Exigeante",
+      "notAvailable": "Indisponible",
+      "veryPopular": "Très populaire",
+      "popular": "Populaire",
+      "smallerCohort": "Cohorte plus restreinte",
+      "error": "Les statistiques du cours sont temporairement indisponibles."
+    },
+    "reviews": {
+      "eyebrow": "Point de vue des étudiants",
+      "title": "Avis de la classe.",
+      "description": "Expériences partagées par des étudiants qui ont suivi ce cours.",
+      "loading": "Chargement des avis…",
+      "emptyTitle": "Aucun avis pour le moment. Soyez la première personne à partager votre expérience.",
+      "leaveReviewTitle": "Laisser un avis.",
+      "leaveReviewDescription": "Partagez une note concise et utile pour les prochains étudiants.",
+      "professorLabel": "Nom du professeur",
+      "optional": "(facultatif)",
+      "professorPlaceholder": "Nom du professeur",
+      "commentLabel": "Commentaire",
+      "commentPlaceholder": "Que devraient savoir les autres étudiants ?",
+      "submitButton": "Publier l’avis",
+      "submitting": "Publication…",
+      "success": "Merci. Votre avis a été publié.",
+      "error": "Impossible de publier votre avis. Veuillez réessayer.",
+      "professorNotSpecified": "Professeur non précisé",
+      "difficultyMetric": "Difficulté",
+      "workloadMetric": "Charge de travail",
+      "ratingOption": "{{rating}} / 5"
+    }
+  },
+  "schedule": {
+    "nav": {
+      "backToSearch": "← Recherche de cours"
+    },
+    "hero": {
+      "eyebrow": "Planificateur d’horaire",
+      "title": "Voyez votre semaine avant qu’elle commence.",
+      "description": "Ajoutez jusqu’à six cours, choisissez une session et explorez les combinaisons de sections disponibles."
+    },
+    "builder": {
+      "title": "Composez votre liste de cours",
+      "description": "Recherchez par code ou par nom. Le backend prend en charge un maximum de six cours.",
+      "semesterLabel": "Session visée",
+      "semesterPlaceholder": "A25",
+      "generateButton": "Générer l’horaire",
+      "generating": "Génération de l’horaire…"
+    },
+    "states": {
+      "empty": {
+        "title": "Votre semaine commence ici.",
+        "detail": "Ajoutez un cours ci-dessus pour commencer à construire votre horaire."
+      },
+      "ready": {
+        "title": "Prêt quand vous l’êtes.",
+        "detail": "Générez un horaire pour voir les combinaisons de sections disponibles."
+      },
+      "error": {
+        "title": "Les horaires sont temporairement indisponibles.",
+        "detail": "Vérifiez la session et réessayez dans un instant."
+      },
+      "noOptions": {
+        "title": "Aucune option d’horaire trouvée.",
+        "detail": "Un ou plusieurs cours n’ont peut-être pas de sections dans cette session. Essayez une autre session ou une autre sélection de cours."
+      },
+      "generating": {
+        "message": "Recherche de toutes les options valides…"
+      }
+    },
+    "calendar": {
+      "headingEyebrow": "Votre calendrier hebdomadaire",
+      "option": "Option {{current}} sur {{total}}",
+      "noConflicts": "Aucun conflit dans cette option.",
+      "conflicts_one": "{{count}} conflit d’horaire détecté.",
+      "conflicts_other": "{{count}} conflits d’horaire détectés.",
+      "previous": "← Précédent",
+      "next": "Suivant →",
+      "legend": "Légende des couleurs des cours",
+      "section": "Section {{sections}}",
+      "conflictBadgeLabel": "Conflit d’horaire",
+      "days": {
+        "Lu": "Lundi",
+        "Ma": "Mardi",
+        "Me": "Mercredi",
+        "Je": "Jeudi",
+        "Ve": "Vendredi",
+        "Sa": "Samedi",
+        "Di": "Dimanche"
+      }
+    },
+    "courseSelector": {
+      "searchLabel": "Rechercher des cours à ajouter",
+      "searchPlaceholder": "Recherchez IFT1025 ou programmation",
+      "searchButton": "Trouver",
+      "searching": "Recherche…",
+      "preview": "Aperçu",
+      "hide": "Masquer",
+      "add": "Ajouter",
+      "added": "Ajouté",
+      "loadingStats": "Chargement des statistiques…",
+      "statsUnavailable": "Statistiques indisponibles",
+      "noResults": "Aucun cours trouvé.",
+      "error": "La recherche est momentanément indisponible.",
+      "viewFullDetails": "Voir tous les détails",
+      "dismiss": "Fermer",
+      "selectedLabel": "Cours sélectionnés",
+      "removeCourse": "Retirer {{courseId}}",
+      "descriptionFallback": "Aucune description de cours n’est encore disponible."
+    }
+  }
+}

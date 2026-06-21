@@ -1,0 +1,189 @@
+{
+  "header": {
+    "byline": "by PickCourse",
+    "languageLabel": "Language",
+    "english": "EN",
+    "french": "FR"
+  },
+  "landing": {
+    "eyebrow": "Find your next course",
+    "title": "Build a schedule with zero conflicts.",
+    "description": "Search the course catalog, find what fits, and make every semester fall into place.",
+    "search": {
+      "label": "Search by course code, name, or description",
+      "placeholder": "Try IFT1025 or algorithms",
+      "button": "Search courses",
+      "buttonShort": "Search"
+    },
+    "states": {
+      "searching": {
+        "title": "Searching courses…"
+      },
+      "error": {
+        "title": "Search is temporarily unavailable.",
+        "detail": "Please try again in a moment."
+      },
+      "empty": {
+        "title": "No courses found.",
+        "detail": "Try a different code or a broader course name."
+      }
+    },
+    "resultsFor": "Results for “{{query}}”",
+    "resultsCount_one": "{{count}} course",
+    "resultsCount_other": "{{count}} courses",
+    "credits_one": "{{count}} cr.",
+    "credits_other": "{{count}} cr."
+  },
+  "courseDetail": {
+    "loading": {
+      "title": "Loading course…"
+    },
+    "notFound": {
+      "title": "We couldn't find that course.",
+      "detail": "Check the course code or return to search."
+    },
+    "nav": {
+      "backToSchedule": "← Back to schedule",
+      "backToSearch": "← Back to search",
+      "allCourses": "← All courses"
+    },
+    "hero": {
+      "credits_one": "{{count}} credit",
+      "credits_other": "{{count}} credits"
+    },
+    "addToSchedule": "Add to schedule",
+    "descriptionFallback": "A course description is not available yet.",
+    "eligibility": {
+      "eyebrow": "Plan with confidence",
+      "title": "Check your eligibility.",
+      "description": "Enter the courses you have completed and your current study cycle.",
+      "completedLabel": "Completed courses",
+      "completedPlaceholder": "IFT1015, MAT1400",
+      "cycleLabel": "Study cycle",
+      "checkButton": "Check eligibility",
+      "checking": "Checking…",
+      "eligibleTitle": "You are eligible.",
+      "eligibleDetail": "{{message}}",
+      "ineligibleTitle": "Not eligible yet.",
+      "ineligibleDetail": "{{message}}",
+      "error": "Eligibility could not be checked right now. Please try again."
+    },
+    "stats": {
+      "eyebrow": "At a glance",
+      "title": "Know what to expect.",
+      "description": "Historical performance and enrollment, stated simply.",
+      "difficultyLabel": "Difficulty",
+      "popularityLabel": "Popularity",
+      "loading": "Loading…",
+      "moderate": "Moderate",
+      "approachable": "Approachable",
+      "challenging": "Challenging",
+      "notAvailable": "Not available",
+      "veryPopular": "Very popular",
+      "popular": "Popular",
+      "smallerCohort": "Smaller cohort",
+      "error": "Course stats are temporarily unavailable."
+    },
+    "reviews": {
+      "eyebrow": "Student perspective",
+      "title": "Reviews from the classroom.",
+      "description": "Experiences shared by students who have taken this course.",
+      "loading": "Loading reviews…",
+      "emptyTitle": "No reviews yet. Be the first to share your experience.",
+      "leaveReviewTitle": "Leave a review.",
+      "leaveReviewDescription": "Share a concise, useful note for the next student.",
+      "professorLabel": "Professor name",
+      "optional": "(optional)",
+      "professorPlaceholder": "Professor name",
+      "commentLabel": "Comment",
+      "commentPlaceholder": "What should other students know?",
+      "submitButton": "Submit review",
+      "submitting": "Submitting…",
+      "success": "Thank you. Your review was submitted.",
+      "error": "Your review could not be submitted. Please try again.",
+      "professorNotSpecified": "Professor not specified",
+      "difficultyMetric": "Difficulty",
+      "workloadMetric": "Workload",
+      "ratingOption": "{{rating}} / 5"
+    }
+  },
+  "schedule": {
+    "nav": {
+      "backToSearch": "← Course search"
+    },
+    "hero": {
+      "eyebrow": "Schedule builder",
+      "title": "See your week before it happens.",
+      "description": "Add up to six courses, choose a session, and explore available section combinations."
+    },
+    "builder": {
+      "title": "Build your course list",
+      "description": "Search by course code or name. The backend supports a maximum of six courses.",
+      "semesterLabel": "Target session",
+      "semesterPlaceholder": "A25",
+      "generateButton": "Generate schedule",
+      "generating": "Generating schedule…"
+    },
+    "states": {
+      "empty": {
+        "title": "Your week starts here.",
+        "detail": "Add a course above to begin building your schedule."
+      },
+      "ready": {
+        "title": "Ready when you are.",
+        "detail": "Generate a schedule to see available section combinations."
+      },
+      "error": {
+        "title": "Schedules are temporarily unavailable.",
+        "detail": "Check the session and try again in a moment."
+      },
+      "noOptions": {
+        "title": "No schedule options found.",
+        "detail": "One or more courses may not have sections in this session. Try another session or course selection."
+      },
+      "generating": {
+        "message": "Finding every valid option…"
+      }
+    },
+    "calendar": {
+      "headingEyebrow": "Your weekly calendar",
+      "option": "Option {{current}} of {{total}}",
+      "noConflicts": "No conflicts in this option.",
+      "conflicts_one": "{{count}} time conflict detected.",
+      "conflicts_other": "{{count}} time conflicts detected.",
+      "previous": "← Previous",
+      "next": "Next →",
+      "legend": "Course color legend",
+      "section": "Section {{sections}}",
+      "conflictBadgeLabel": "Schedule conflict",
+      "days": {
+        "Lu": "Monday",
+        "Ma": "Tuesday",
+        "Me": "Wednesday",
+        "Je": "Thursday",
+        "Ve": "Friday",
+        "Sa": "Saturday",
+        "Di": "Sunday"
+      }
+    },
+    "courseSelector": {
+      "searchLabel": "Search courses to add",
+      "searchPlaceholder": "Search IFT1025 or programming",
+      "searchButton": "Find",
+      "searching": "Searching…",
+      "preview": "Preview",
+      "hide": "Hide",
+      "add": "Add",
+      "added": "Added",
+      "loadingStats": "Loading stats…",
+      "statsUnavailable": "Stats unavailable",
+      "noResults": "No courses found.",
+      "error": "Search is temporarily unavailable.",
+      "viewFullDetails": "View full details",
+      "dismiss": "Dismiss",
+      "selectedLabel": "Selected courses",
+      "removeCourse": "Remove {{courseId}}",
+      "descriptionFallback": "No course description is available yet."
+    }
+  }
+}

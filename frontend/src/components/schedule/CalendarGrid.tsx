@@ -1,10 +1,10 @@
 import type { CSSProperties } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { Course } from '../../types/course'
 import type { ScheduleBlock, ScheduleConflict, ScheduleOption } from '../../types/schedule'
 import { COURSE_COLORS } from './colors'
 
 const HOUR_HEIGHT = 64
-const DAY_NAMES: Record<string, string> = { Lu: 'Monday', Ma: 'Tuesday', Me: 'Wednesday', Je: 'Thursday', Ve: 'Friday', Sa: 'Saturday', Di: 'Sunday' }
 const WEEKDAY_BASELINE = ['Lu', 'Ma', 'Me', 'Je', 'Ve']
 const DAY_ORDER = [...WEEKDAY_BASELINE, 'Sa', 'Di']
 const DAY_ALIASES: Record<string, string> = {
@@ -25,6 +25,7 @@ interface CalendarEvent {
 }
 
 export function CalendarGrid({ option, courses }: { option: ScheduleOption; courses: Course[] }) {
+  const { t, i18n } = useTranslation()
   const events = toEvents(option.horaire)
   const observedDays = [...new Set(events.map((event) => event.day))]
   const additionalDays = observedDays
@@ -41,11 +42,11 @@ export function CalendarGrid({ option, courses }: { option: ScheduleOption; cour
       <div className="min-w-[760px]">
         <div className="grid border-b border-primary/[0.08]" style={{ gridTemplateColumns: `4.5rem repeat(${days.length}, minmax(0, 1fr))` }}>
           <div />
-          {days.map((day) => <div className="pb-4 text-center text-xs font-semibold text-secondary" key={day}>{DAY_NAMES[day] ?? day}</div>)}
+          {days.map((day) => <div className="pb-4 text-center text-xs font-semibold text-secondary" key={day}>{t(`schedule.calendar.days.${day}`)}</div>)}
         </div>
         <div className="grid" style={{ gridTemplateColumns: `4.5rem repeat(${days.length}, minmax(0, 1fr))` }}>
           <div className="relative" style={{ height: totalHeight }}>
-            {hours.map((minutes, index) => <span className="absolute right-3 -translate-y-1/2 font-mono text-[10px] text-secondary" key={minutes} style={{ top: index * HOUR_HEIGHT }}>{formatTime(minutes)}</span>)}
+            {hours.map((minutes, index) => <span className="absolute right-3 -translate-y-1/2 font-mono text-[10px] text-secondary" key={minutes} style={{ top: index * HOUR_HEIGHT }}>{formatTime(minutes, i18n.language)}</span>)}
           </div>
           {days.map((day) => (
             <div className="relative border-l border-primary/[0.07]" key={day} style={{ height: totalHeight, backgroundImage: `repeating-linear-gradient(to bottom, transparent 0, transparent ${HOUR_HEIGHT - 1}px, var(--color-grid-line) ${HOUR_HEIGHT - 1}px, var(--color-grid-line) ${HOUR_HEIGHT}px)` }}>
@@ -61,6 +62,7 @@ export function CalendarGrid({ option, courses }: { option: ScheduleOption; cour
 }
 
 function CalendarBlock({ event, course, courseIndex, minMinutes, option, conflict }: { event: CalendarEvent; course?: Course; courseIndex: number; minMinutes: number; option: ScheduleOption; conflict?: ScheduleConflict }) {
+  const { t } = useTranslation()
   const color = COURSE_COLORS[Math.max(courseIndex, 0) % COURSE_COLORS.length]
   const conflictCount = conflict?.cours.length ?? 1
   const conflictIndex = conflict ? conflict.cours.indexOf(event.courseId) : 0
@@ -82,13 +84,14 @@ function CalendarBlock({ event, course, courseIndex, minMinutes, option, conflic
         {conflict && <ConflictBadge />}
       </div>
       <p className="mt-0.5 truncate font-mono text-[9px] opacity-75">{event.time}</p>
-      {sections && <p className="mt-1 truncate text-[9px] font-medium opacity-75">Section {sections}</p>}
+      {sections && <p className="mt-1 truncate text-[9px] font-medium opacity-75">{t('schedule.calendar.section', { sections })}</p>}
     </article>
   )
 }
 
 function ConflictBadge() {
-  return <span aria-label="Schedule conflict" className="grid h-4 w-4 shrink-0 place-items-center rounded-full bg-conflict text-[10px] font-bold text-white" title="Schedule conflict">!</span>
+  const { t } = useTranslation()
+  return <span aria-label={t('schedule.calendar.conflictBadgeLabel')} className="grid h-4 w-4 shrink-0 place-items-center rounded-full bg-conflict text-[10px] font-bold text-white" title={t('schedule.calendar.conflictBadgeLabel')}>!</span>
 }
 
 function toEvents(schedule: Record<string, ScheduleBlock[]>): CalendarEvent[] {
@@ -137,9 +140,10 @@ function parseTime(value: string): number | null {
   return hours * 60 + minutes
 }
 
-function formatTime(minutes: number) {
+function formatTime(minutes: number, language: string) {
   const hours = Math.floor(minutes / 60)
-  const suffix = hours >= 12 ? 'PM' : 'AM'
   const displayHours = hours % 12 || 12
+  if (language.startsWith('fr')) return `${hours} h`
+  const suffix = hours >= 12 ? 'PM' : 'AM'
   return `${displayHours} ${suffix}`
 }

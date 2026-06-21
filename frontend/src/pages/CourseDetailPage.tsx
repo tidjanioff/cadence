@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   checkEligibility,
   createReview,
@@ -18,6 +19,7 @@ import type { Course, CourseDetailNavigationState, ScheduleDraft, ScheduleNaviga
 const inputClass = 'field mt-2 w-full'
 
 export function CourseDetailPage() {
+  const { t, i18n } = useTranslation()
   const location = useLocation()
   const { id = '' } = useParams()
   const courseId = decodeURIComponent(id).toUpperCase()
@@ -75,14 +77,14 @@ export function CourseDetailPage() {
     return () => controller.abort()
   }, [courseId])
 
-  if (isLoading) return <FullPageStatus loading title="Loading course…" />
+  if (isLoading) return <FullPageStatus loading title={t('courseDetail.loading.title')} />
 
   if (courseError || !course) {
     return (
       <FullPageStatus
-        title="We couldn't find that course."
-        detail="Check the course code or return to search."
-        action={<Link className="font-semibold text-accent" to="/">Back to search</Link>}
+        title={t('courseDetail.notFound.title')}
+        detail={t('courseDetail.notFound.detail')}
+        action={<Link className="font-semibold text-accent" to="/">{t('courseDetail.nav.backToSearch')}</Link>}
       />
     )
   }
@@ -102,8 +104,8 @@ export function CourseDetailPage() {
           state={scheduleDraft ? { selectedCourses: scheduleDraft.selectedCourses, semester: scheduleDraft.semester } satisfies ScheduleNavigationState : undefined}
           to={scheduleDraft ? '/schedule' : '/'}
         >
-          <span className="sm:hidden">← Back</span>
-          <span className="hidden sm:inline">{scheduleDraft ? '← Back to schedule' : '← All courses'}</span>
+          <span className="sm:hidden">{scheduleDraft ? t('courseDetail.nav.backToSchedule') : t('courseDetail.nav.backToSearch')}</span>
+          <span className="hidden sm:inline">{scheduleDraft ? t('courseDetail.nav.backToSchedule') : t('courseDetail.nav.allCourses')}</span>
         </Link>
       } />
 
@@ -111,19 +113,19 @@ export function CourseDetailPage() {
         <div className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-end">
           <div>
             <p className="font-mono text-xl font-semibold tracking-[0.08em] text-accent sm:text-2xl">{course.id}</p>
-            <h1 className="mt-5 max-w-4xl text-5xl font-semibold leading-[0.97] tracking-[-0.055em] text-primary sm:text-7xl lg:text-[5.25rem]">{course.name}</h1>
+            <h1 className={i18n.language.startsWith('fr') ? 'mt-5 max-w-4xl text-5xl font-semibold leading-[0.99] tracking-[-0.055em] text-primary sm:text-6xl lg:text-[4.75rem]' : 'mt-5 max-w-4xl text-5xl font-semibold leading-[0.97] tracking-[-0.055em] text-primary sm:text-7xl lg:text-[5.25rem]'}>{course.name}</h1>
           </div>
-          <span className="shrink-0 rounded-full bg-primary/[0.05] px-4 py-2 font-mono text-sm text-primary">{course.credits} credits</span>
+          <span className="shrink-0 rounded-full bg-primary/[0.05] px-4 py-2 font-mono text-sm text-primary">{t('courseDetail.hero.credits', { count: course.credits })}</span>
         </div>
         <p className="mt-9 max-w-3xl text-lg leading-8 text-secondary sm:text-xl sm:leading-9">
-          {course.description || 'A course description is not available yet.'}
+          {course.description || t('courseDetail.descriptionFallback')}
         </p>
         <Link
           className="button-primary mt-10 inline-flex items-center"
           state={scheduleState}
           to="/schedule"
         >
-          Add to schedule <span className="ml-2" aria-hidden="true">→</span>
+          {t('courseDetail.addToSchedule')} <span className="ml-2" aria-hidden="true">→</span>
         </Link>
       </header>
 
@@ -149,6 +151,7 @@ function mergeCourses(courses: Course[], courseToAdd: Course) {
 }
 
 function EligibilitySection({ courseId }: { courseId: string }) {
+  const { t } = useTranslation()
   const [completedCourses, setCompletedCourses] = useState('')
   const [cycle, setCycle] = useState('1')
   const [result, setResult] = useState<EligibilityResult | null>(null)
@@ -172,43 +175,46 @@ function EligibilitySection({ courseId }: { courseId: string }) {
 
   return (
     <section aria-labelledby="eligibility-heading">
-      <SectionHeading eyebrow="Plan with confidence" title="Check your eligibility." description="Enter the courses you have completed and your current study cycle." id="eligibility-heading" />
+      <SectionHeading eyebrow={t('courseDetail.eligibility.eyebrow')} title={t('courseDetail.eligibility.title')} description={t('courseDetail.eligibility.description')} id="eligibility-heading" />
       <div className="surface-card mt-10 p-6 sm:p-8">
         <form className="grid gap-5 sm:grid-cols-[1fr_10rem_auto] sm:items-end" onSubmit={handleSubmit}>
           <label className="text-sm font-medium text-primary">
-            Completed courses
-            <input className={inputClass} value={completedCourses} onChange={(event) => setCompletedCourses(event.target.value)} placeholder="IFT1015, MAT1400" />
+            {t('courseDetail.eligibility.completedLabel')}
+            <input className={inputClass} value={completedCourses} onChange={(event) => setCompletedCourses(event.target.value)} placeholder={t('courseDetail.eligibility.completedPlaceholder')} />
           </label>
           <label className="text-sm font-medium text-primary">
-            Study cycle
+            {t('courseDetail.eligibility.cycleLabel')}
             <select className={inputClass} value={cycle} onChange={(event) => setCycle(event.target.value)}>
-              {[1, 2, 3, 4].map((value) => <option key={value} value={value}>Cycle {value}</option>)}
+              {[1, 2, 3, 4].map((value) => <option key={value} value={value}>{t('courseDetail.eligibility.cycleLabel')} {value}</option>)}
             </select>
           </label>
           <button className="button-secondary py-4" disabled={isChecking} type="submit">
-            {isChecking ? 'Checking…' : 'Check eligibility'}
+            {isChecking ? t('courseDetail.eligibility.checking') : t('courseDetail.eligibility.checkButton')}
           </button>
         </form>
         {result && (
           <div className={`mt-6 rounded-card border px-5 py-4 text-sm leading-6 text-primary ${result.eligible ? 'border-accent/20 bg-accent/[0.06]' : 'border-conflict/20 bg-conflict/[0.05]'}`} role="status">
-            <p className="font-semibold">{result.eligible ? 'You are eligible.' : 'Not eligible yet.'}</p>
+            <p className="font-semibold">{result.eligible ? t('courseDetail.eligibility.eligibleTitle') : t('courseDetail.eligibility.ineligibleTitle')}</p>
             <p className="mt-1 opacity-80">{result.message}</p>
           </div>
         )}
-        {hasError && <InlineError message="Eligibility could not be checked right now. Please try again." />}
+        {hasError && <InlineError message={t('courseDetail.eligibility.error')} />}
       </div>
     </section>
   )
 }
 
 function StatsSection({ difficulty, popularity, hasError }: { difficulty: string | null; popularity: string | null; hasError: boolean }) {
+  const { t } = useTranslation()
+  const difficultyValue = translateDifficulty(difficulty, t)
+  const popularityValue = translatePopularity(popularity, t)
   return (
     <section aria-labelledby="stats-heading">
-      <SectionHeading eyebrow="At a glance" title="Know what to expect." description="Historical performance and enrollment, stated simply." id="stats-heading" />
-      {hasError ? <InlineError message="Course stats are temporarily unavailable." /> : (
+      <SectionHeading eyebrow={t('courseDetail.stats.eyebrow')} title={t('courseDetail.stats.title')} description={t('courseDetail.stats.description')} id="stats-heading" />
+      {hasError ? <InlineError message={t('courseDetail.stats.error')} /> : (
         <div className="mt-10 grid gap-4 sm:grid-cols-2">
-          <StatCard label="Difficulty" value={difficultyLabel(difficulty)} detail={difficulty} />
-          <StatCard label="Popularity" value={popularityLabel(popularity)} detail={popularity} />
+          <StatCard label={t('courseDetail.stats.difficultyLabel')} value={difficultyValue} detail={difficulty} />
+          <StatCard label={t('courseDetail.stats.popularityLabel')} value={popularityValue} detail={popularity} />
         </div>
       )}
     </section>
@@ -216,6 +222,7 @@ function StatsSection({ difficulty, popularity, hasError }: { difficulty: string
 }
 
 function ReviewsSection({ courseId, reviews, setReviews, isLoading, hasError }: { courseId: string; reviews: CourseReview[]; setReviews: React.Dispatch<React.SetStateAction<CourseReview[]>>; isLoading: boolean; hasError: boolean }) {
+  const { t } = useTranslation()
   const [professor, setProfessor] = useState('')
   const [difficulty, setDifficulty] = useState('3')
   const [workload, setWorkload] = useState('3')
@@ -246,18 +253,18 @@ function ReviewsSection({ courseId, reviews, setReviews, isLoading, hasError }: 
 
   return (
     <section aria-labelledby="reviews-heading">
-      <SectionHeading eyebrow="Student perspective" title="Reviews from the classroom." description="Experiences shared by students who have taken this course." id="reviews-heading" />
+      <SectionHeading eyebrow={t('courseDetail.reviews.eyebrow')} title={t('courseDetail.reviews.title')} description={t('courseDetail.reviews.description')} id="reviews-heading" />
       <div className="mt-10 space-y-4">
-        {isLoading && <InlineLoading message="Loading reviews…" />}
-        {hasError && <InlineError message="Reviews are temporarily unavailable." />}
-        {!isLoading && !hasError && reviews.length === 0 && <p className="rounded-panel bg-primary/[0.035] px-6 py-8 text-center text-sm text-secondary">No reviews yet. Be the first to share your experience.</p>}
+        {isLoading && <InlineLoading message={t('courseDetail.reviews.loading')} />}
+        {hasError && <InlineError message={t('courseDetail.reviews.error')} />}
+        {!isLoading && !hasError && reviews.length === 0 && <p className="rounded-panel bg-primary/[0.035] px-6 py-8 text-center text-sm text-secondary">{t('courseDetail.reviews.emptyTitle')}</p>}
         {reviews.map((review, index) => (
           <article className="surface-card p-6 sm:p-8" key={`${review.nomProfesseur}-${index}`}>
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h3 className="font-semibold text-primary">{review.nomProfesseur || 'Professor not specified'}</h3>
+              <h3 className="font-semibold text-primary">{review.nomProfesseur || t('courseDetail.reviews.professorNotSpecified')}</h3>
               <div className="flex gap-4 font-mono text-xs text-secondary">
-                <span>Difficulty {review.noteDifficulte}/5</span>
-                <span>Workload {review.noteChargeTravail}/5</span>
+                <span>{t('courseDetail.reviews.difficultyMetric')} {review.noteDifficulte}/5</span>
+                <span>{t('courseDetail.reviews.workloadMetric')} {review.noteChargeTravail}/5</span>
               </div>
             </div>
             <p className="mt-5 leading-7 text-secondary">{review.commentaire}</p>
@@ -266,21 +273,21 @@ function ReviewsSection({ courseId, reviews, setReviews, isLoading, hasError }: 
       </div>
 
       <div className="mt-14 border-t border-primary/[0.08] pt-14">
-        <h3 className="text-3xl font-semibold tracking-[-0.04em] text-primary">Leave a review.</h3>
-        <p className="mt-3 text-secondary">Share a concise, useful note for the next student.</p>
+        <h3 className="text-3xl font-semibold tracking-[-0.04em] text-primary">{t('courseDetail.reviews.leaveReviewTitle')}</h3>
+        <p className="mt-3 text-secondary">{t('courseDetail.reviews.leaveReviewDescription')}</p>
         <form className="mt-8 grid gap-5 sm:grid-cols-2" onSubmit={handleSubmit}>
-          <label className="text-sm font-medium text-primary sm:col-span-2">Professor name <span className="font-normal text-secondary">(optional)</span>
-            <input className={inputClass} value={professor} onChange={(event) => setProfessor(event.target.value)} placeholder="Professor name" />
+          <label className="text-sm font-medium text-primary sm:col-span-2">{t('courseDetail.reviews.professorLabel')} <span className="font-normal text-secondary">{t('courseDetail.reviews.optional')}</span>
+            <input className={inputClass} value={professor} onChange={(event) => setProfessor(event.target.value)} placeholder={t('courseDetail.reviews.professorPlaceholder')} />
           </label>
-          <RatingSelect label="Difficulty" value={difficulty} onChange={setDifficulty} />
-          <RatingSelect label="Workload" value={workload} onChange={setWorkload} />
-          <label className="text-sm font-medium text-primary sm:col-span-2">Comment
-            <textarea className={`${inputClass} min-h-32 resize-y`} required value={comment} onChange={(event) => setComment(event.target.value)} placeholder="What should other students know?" />
+          <RatingSelect label={t('courseDetail.reviews.difficultyMetric')} value={difficulty} onChange={setDifficulty} />
+          <RatingSelect label={t('courseDetail.reviews.workloadMetric')} value={workload} onChange={setWorkload} />
+          <label className="text-sm font-medium text-primary sm:col-span-2">{t('courseDetail.reviews.commentLabel')}
+            <textarea className={`${inputClass} min-h-32 resize-y`} required value={comment} onChange={(event) => setComment(event.target.value)} placeholder={t('courseDetail.reviews.commentPlaceholder')} />
           </label>
           <div className="flex flex-wrap items-center gap-4 sm:col-span-2">
-            <button className="button-primary" disabled={isSubmitting || !comment.trim()} type="submit">{isSubmitting ? 'Submitting…' : 'Submit review'}</button>
-            {submitted && <p className="text-sm font-medium text-accent" role="status">Thank you. Your review was submitted.</p>}
-            {submitError && <p className="text-sm text-conflict" role="alert">Your review could not be submitted. Please try again.</p>}
+            <button className="button-primary" disabled={isSubmitting || !comment.trim()} type="submit">{isSubmitting ? t('courseDetail.reviews.submitting') : t('courseDetail.reviews.submitButton')}</button>
+            {submitted && <p className="text-sm font-medium text-accent" role="status">{t('courseDetail.reviews.success')}</p>}
+            {submitError && <p className="text-sm text-conflict" role="alert">{t('courseDetail.reviews.error')}</p>}
           </div>
         </form>
       </div>
@@ -289,11 +296,13 @@ function ReviewsSection({ courseId, reviews, setReviews, isLoading, hasError }: 
 }
 
 function StatCard({ label, value, detail }: { label: string; value: string; detail: string | null }) {
-  return <article className="rounded-panel bg-primary/[0.035] p-6 sm:p-8"><p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-secondary">{label}</p><p className="mt-5 text-3xl font-semibold tracking-[-0.04em] text-primary">{value}</p><p className="mt-4 text-sm leading-6 text-secondary">{detail || 'Loading…'}</p></article>
+  const { t } = useTranslation()
+  return <article className="rounded-panel bg-primary/[0.035] p-6 sm:p-8"><p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-secondary">{label}</p><p className="mt-5 text-3xl font-semibold tracking-[-0.04em] text-primary">{value}</p><p className="mt-4 text-sm leading-6 text-secondary">{detail || t('courseDetail.stats.loading')}</p></article>
 }
 
 function RatingSelect({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
-  return <label className="text-sm font-medium text-primary">{label}<select className={inputClass} value={value} onChange={(event) => onChange(event.target.value)}>{[1, 2, 3, 4, 5].map((rating) => <option key={rating} value={rating}>{rating} / 5</option>)}</select></label>
+  const { t } = useTranslation()
+  return <label className="text-sm font-medium text-primary">{label}<select className={inputClass} value={value} onChange={(event) => onChange(event.target.value)}>{[1, 2, 3, 4, 5].map((rating) => <option key={rating} value={rating}>{t('courseDetail.reviews.ratingOption', { rating })}</option>)}</select></label>
 }
 
 function InlineError({ message }: { message: string }) {
@@ -304,18 +313,18 @@ function FullPageStatus({ title, detail, action, loading = false }: { title: str
   return <main className="page-shell"><AppHeader /><StatusState action={action} className="grid min-h-[70vh] place-content-center" detail={detail} loading={loading} title={title} /></main>
 }
 
-function difficultyLabel(message: string | null) {
-  if (!message) return 'Loading…'
-  if (message.includes('difficulté moyenne')) return 'Moderate'
-  if (message.includes('facile')) return 'Approachable'
-  if (message.includes('difficile')) return 'Challenging'
-  return 'Not available'
+function translateDifficulty(message: string | null, t: (key: string, options?: { count?: number; rating?: number }) => string) {
+  if (!message) return t('courseDetail.stats.loading')
+  if (message.includes('difficulté moyenne')) return t('courseDetail.stats.moderate')
+  if (message.includes('facile')) return t('courseDetail.stats.approachable')
+  if (message.includes('difficile')) return t('courseDetail.stats.challenging')
+  return t('courseDetail.stats.notAvailable')
 }
 
-function popularityLabel(message: string | null) {
-  if (!message) return 'Loading…'
-  if (message.includes('très populaire')) return 'Very popular'
-  if (message.includes('modérément populaire')) return 'Popular'
-  if (message.includes('peu populaire')) return 'Smaller cohort'
-  return 'Not available'
+function translatePopularity(message: string | null, t: (key: string, options?: { count?: number; rating?: number }) => string) {
+  if (!message) return t('courseDetail.stats.loading')
+  if (message.includes('très populaire')) return t('courseDetail.stats.veryPopular')
+  if (message.includes('modérément populaire')) return t('courseDetail.stats.popular')
+  if (message.includes('peu populaire')) return t('courseDetail.stats.smallerCohort')
+  return t('courseDetail.stats.notAvailable')
 }

@@ -1,5 +1,6 @@
 import { useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { searchCourses } from '../api/courses'
 import { AppHeader } from '../components/ui/AppHeader'
 import { StatusState } from '../components/ui/StatusState'
@@ -7,6 +8,7 @@ import { PageIntro } from '../components/ui/Typography'
 import type { Course } from '../types/course'
 
 export function LandingPage() {
+  const { t } = useTranslation()
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<Course[] | null>(null)
   const [searchedFor, setSearchedFor] = useState('')
@@ -44,11 +46,11 @@ export function LandingPage() {
 
       <section className="mx-auto flex max-w-5xl flex-col items-center pb-16 pt-24 text-center sm:pb-20 sm:pt-32">
         <div className="reveal flex flex-col items-center">
-          <PageIntro eyebrow="Find your next course" title="Build a schedule with zero conflicts." description="Search the course catalog, find what fits, and make every semester fall into place." />
+          <PageIntro eyebrow={t('landing.eyebrow')} title={t('landing.title')} description={t('landing.description')} />
         </div>
 
         <form className="reveal reveal-delay-2 mt-10 w-full max-w-3xl sm:mt-12" onSubmit={handleSearch} role="search">
-          <label className="sr-only" htmlFor="course-search">Search by course code, name, or description</label>
+          <label className="sr-only" htmlFor="course-search">{t('landing.search.label')}</label>
           <div className="flex items-center gap-2 rounded-panel border border-primary/[0.08] bg-surface p-2.5 shadow-card transition focus-within:border-accent/40 focus-within:ring-4 focus-within:ring-accent/10 sm:gap-3 sm:p-3">
             <svg className="ml-2 h-5 w-5 shrink-0 text-secondary sm:ml-3" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
               <circle cx="11" cy="11" r="7" />
@@ -60,7 +62,7 @@ export function LandingPage() {
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Try IFT1025 or algorithms"
+              placeholder={t('landing.search.placeholder')}
               autoComplete="off"
             />
             <button
@@ -68,27 +70,27 @@ export function LandingPage() {
               type="submit"
               disabled={!query.trim() || isLoading}
             >
-              <span className="hidden sm:inline">Search courses</span>
-              <span className="sm:hidden">Search</span>
+              <span className="hidden sm:inline">{t('landing.search.button')}</span>
+              <span className="sm:hidden">{t('landing.search.buttonShort')}</span>
             </button>
           </div>
         </form>
       </section>
 
       <section className="mx-auto max-w-4xl" aria-live="polite" aria-busy={isLoading}>
-        {isLoading && <StatusState loading title="Searching courses…" />}
+        {isLoading && <StatusState loading title={t('landing.states.searching.title')} />}
         {!isLoading && hasError && (
-          <StatusState title="Search is temporarily unavailable." detail="Please try again in a moment." />
+          <StatusState title={t('landing.states.error.title')} detail={t('landing.states.error.detail')} />
         )}
         {!isLoading && !hasError && results?.length === 0 && (
-          <StatusState title="No courses found." detail="Try a different code or a broader course name." />
+          <StatusState title={t('landing.states.empty.title')} detail={t('landing.states.empty.detail')} />
         )}
         {!isLoading && results && results.length > 0 && (
           <div className="results-enter">
             <div className="mb-5 flex items-end justify-between gap-4 px-1">
               <div>
-                <p className="text-sm text-secondary">Results for “{searchedFor}”</p>
-                <h2 className="mt-1 text-2xl font-semibold tracking-[-0.03em] text-primary">{results.length} {results.length === 1 ? 'course' : 'courses'}</h2>
+                <p className="text-sm text-secondary">{t('landing.resultsFor', { query: searchedFor })}</p>
+                <h2 className="mt-1 text-2xl font-semibold tracking-[-0.03em] text-primary">{t('landing.resultsCount', { count: results.length })}</h2>
               </div>
             </div>
             <ul className="space-y-3">
@@ -102,7 +104,7 @@ export function LandingPage() {
                       <p className="shrink-0 font-mono text-sm font-semibold tracking-wide text-accent sm:w-24">{course.id}</p>
                       <p className="mt-1 truncate text-base font-medium text-primary sm:mt-0">{course.name}</p>
                     </div>
-                    <p className="shrink-0 text-sm text-secondary">{course.credits} cr.</p>
+                    <p className="shrink-0 text-sm text-secondary">{t('landing.credits', { count: course.credits })}</p>
                     <svg className="h-5 w-5 shrink-0 text-secondary transition group-hover:translate-x-0.5 group-hover:text-primary" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m9 5 7 7-7 7" />
                     </svg>
